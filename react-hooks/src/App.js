@@ -1,9 +1,58 @@
-import React from 'react';
+import React, {useState} from 'react'
+
+function computeInitialCounter() {
+  // console.log('some calculations...')
+  return Math.trunc(Math.random() * 20)
+}
 
 function App() {
+
+  // const counterState =  useState(0)
+
+  // console.log('counterState', counterState[0]);
+  // console.log('counterState', counterState[1]);
+
+  // const [counter, setCounter] = useState(0)
+  // const [counter, setCounter] = useState(computeInitialCounter())
+  const [counter, setCounter] = useState(() => {
+    return computeInitialCounter()
+  })
+
+  const [state, setState] = useState({
+    title: 'Счетчик',
+    date: Date.now()
+  })
+
+  function increment() {
+    // setCounter(counter + 1)
+    setCounter(counter + 1)
+    setCounter( (prevCounter) => {
+      return prevCounter + 1
+    })
+    // setCounter(prev => prev + 1)
+  }
+
+  function decrement() {
+    setCounter(counter - 1)
+  }
+
+  function updateTitle() {
+    setState(prev => {
+      return {
+        ...prev,
+        title: 'New name'
+      }
+    })
+  }
+
   return (
     <div>
-      <h1>HELLO HOOKS</h1>
+      <h1>Счетчик: {counter}</h1>
+      <button onClick={increment} className='btn btn-success'>Добавить</button>
+      <button onClick={decrement} className='btn btn-danger'>Убрать</button>
+      <button onClick={updateTitle} className='btn btn-default'>Изменить название</button>
+
+      <pre>{JSON.stringify(state, null, 2)}</pre>
     </div>
   )
 }
