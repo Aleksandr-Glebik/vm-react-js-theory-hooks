@@ -1,58 +1,51 @@
-import React, {useState} from 'react'
-
-function computeInitialCounter() {
-  // console.log('some calculations...')
-  return Math.trunc(Math.random() * 20)
-}
+import React, {useState, useEffect} from 'react'
 
 function App() {
+  const [type, setType] = useState('users')
+  const [data, setData] = useState([])
+  // const [pos, setPos] = useState({
+  //   x: 0,
+  //   y: 0
+  // })
 
-  // const counterState =  useState(0)
+  // useEffect( () => {
+  //   console.log('RENDER');
+  // })
 
-  // console.log('counterState', counterState[0]);
-  // console.log('counterState', counterState[1]);
+  useEffect( () => {
+    // console.log('type change', type);
+    fetch(`https://jsonplaceholder.typicode.com/${type}`)
+      .then(response => response.json())
+      .then(json => setData(json))
+  }, [type])
 
-  // const [counter, setCounter] = useState(0)
-  // const [counter, setCounter] = useState(computeInitialCounter())
-  const [counter, setCounter] = useState(() => {
-    return computeInitialCounter()
-  })
+  // const mouseMoveHandler = event => {
+  //   setPos({
+  //     x: event.clientX,
+  //     y: event.clientY,
+  //   })
+  // }
 
-  const [state, setState] = useState({
-    title: 'Счетчик',
-    date: Date.now()
-  })
+  // useEffect( () => {
+  //   window.addEventListener('mousemove', mouseMoveHandler)
 
-  function increment() {
-    // setCounter(counter + 1)
-    setCounter(counter + 1)
-    setCounter( (prevCounter) => {
-      return prevCounter + 1
-    })
-    // setCounter(prev => prev + 1)
-  }
-
-  function decrement() {
-    setCounter(counter - 1)
-  }
-
-  function updateTitle() {
-    setState(prev => {
-      return {
-        ...prev,
-        title: 'New name'
-      }
-    })
-  }
+  //   return () => {
+  //     window.removeEventListener('mousemove', mouseMoveHandler)
+  //   }
+  // }, [])
 
   return (
     <div>
-      <h1>Счетчик: {counter}</h1>
-      <button onClick={increment} className='btn btn-success'>Добавить</button>
-      <button onClick={decrement} className='btn btn-danger'>Убрать</button>
-      <button onClick={updateTitle} className='btn btn-default'>Изменить название</button>
+      <h1>Ресурс: {type}</h1>
+      <button onClick={() => setType('users')}>Пользователи</button>
+      <button onClick={() => setType('todos')}>Todos</button>
+      <button onClick={() => setType('posts')}>Посты</button>
 
-      <pre>{JSON.stringify(state, null, 2)}</pre>
+      <pre>
+      {JSON.stringify(data, null, 2)}
+      {/* {JSON.stringify(pos, null, 2)} */}
+
+      </pre>
     </div>
   )
 }
