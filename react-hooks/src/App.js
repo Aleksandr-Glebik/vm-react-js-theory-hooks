@@ -1,51 +1,38 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
+
+// let renderCount = 1
 
 function App() {
-  const [type, setType] = useState('users')
-  const [data, setData] = useState([])
-  // const [pos, setPos] = useState({
-  //   x: 0,
-  //   y: 0
-  // })
+
+  // const [renderCount, setRenderCount] = useState(1)
+  const [value, setValue] = useState('initial')
+  const renderCount = useRef(1)
+  const inputRef = useRef(null)
+  const prevValue = useRef('')
 
   // useEffect( () => {
-  //   console.log('RENDER');
+  //   setRenderCount( prev => prev + 1)
   // })
+/*   useEffect( () => {
+    renderCount++
+  }) */
+  useEffect( () => {
+    renderCount.current++
+    console.log(inputRef.current.value);
+  })
 
   useEffect( () => {
-    // console.log('type change', type);
-    fetch(`https://jsonplaceholder.typicode.com/${type}`)
-      .then(response => response.json())
-      .then(json => setData(json))
-  }, [type])
+    prevValue.current = value
+  }, [value])
 
-  // const mouseMoveHandler = event => {
-  //   setPos({
-  //     x: event.clientX,
-  //     y: event.clientY,
-  //   })
-  // }
-
-  // useEffect( () => {
-  //   window.addEventListener('mousemove', mouseMoveHandler)
-
-  //   return () => {
-  //     window.removeEventListener('mousemove', mouseMoveHandler)
-  //   }
-  // }, [])
+  const focus = () => inputRef.current.focus()
 
   return (
     <div>
-      <h1>Ресурс: {type}</h1>
-      <button onClick={() => setType('users')}>Пользователи</button>
-      <button onClick={() => setType('todos')}>Todos</button>
-      <button onClick={() => setType('posts')}>Посты</button>
-
-      <pre>
-      {JSON.stringify(data, null, 2)}
-      {/* {JSON.stringify(pos, null, 2)} */}
-
-      </pre>
+      <h1>Количество рендеров: {renderCount.current} </h1>
+      <h3>Предыдущее состояние: {prevValue.current} </h3>
+      <input ref={inputRef} type={'text'} onChange={e => setValue(e.target.value)} value={value} />
+      <button className='btn btn-success' onClick={focus}>Фокус</button>
     </div>
   )
 }
