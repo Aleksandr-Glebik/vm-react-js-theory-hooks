@@ -8,8 +8,8 @@ export default function Alert() {
     if (!alert.visible) return null
 
     return (
-       <div className={'alert alert-danger'} onClick={alert.toggle}>
-           Вери импотант мессадж
+       <div className={'alert alert-danger'} onClick={alert.hide}>
+           {alert.text}
        </div>
     )
 }
