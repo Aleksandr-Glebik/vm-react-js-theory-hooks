@@ -1,40 +1,25 @@
-import React, {useState, useMemo, useEffect} from 'react'
-
-function complexCompute(num) {
-  console.log('render ');
-  let i = 0
-  while (i < 1000) i++
-  return num * 2
-}
+import React, {useState, useCallback} from 'react'
+import ItemsList from './itemsList'
 
 function App() {
-  const [number, setNumber] = useState(3)
   const [colored, setColored] = useState(false)
+  const [count, setCount] = useState(1)
 
-  const styles = useMemo( () => ({
+  const styles = {
       color: colored ? 'darkred' : 'black'
-  }), [colored])
- /*  const styles = useMemo( () => {
-    return {
-      color: colored ? 'darkred' : 'black'
-    }
-  }, [colored]) */
+  }
 
-  const computed = useMemo( () => {
-    return complexCompute(number)
-  }, [number])
-
-  useEffect( () => {
-    console.log('styles changed');
-  }, [styles])
-
+  const generateItemsFromAPI = useCallback( () => {
+    return new Array(count).fill('').map( (_, i) => `Элемент ${i + 1}`)
+  }, [count] )
 
   return (
     <div>
-      <h1 style={styles}>Вычисляемое свойство: {computed}</h1>
-      <button className='btn btn-success' onClick={ () => setNumber( prev => prev + 1)}>Добавить</button>
-      <button className='btn btn-danger' onClick={ () => setNumber( prev => prev - 1)}>Убрать</button>
+      <h1 style={styles}>Количество элементов {count}</h1>
+      <button className='btn btn-success' onClick={ () => setCount( prev => prev + 1)}>Добавить</button>
       <button className='btn btn-warning' onClick={ () => setColored( prev => !prev)}>Изменить</button>
+
+      <ItemsList getItems={generateItemsFromAPI}/>
     </div>
   )
 }
